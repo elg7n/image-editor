@@ -5,11 +5,22 @@ const filterOptions = document.querySelectorAll(".filter button");
 const filterName = document.querySelector(".filter-info .name");
 const filterValue = document.querySelector(".filter-info .value");
 const filterSlider = document.querySelector(".slider input");
+const rotateOptions = document.querySelectorAll(".rotate button");
+const resetFilterBtn = document.querySelector(".reset-filter");
+const saveImgBtn = document.querySelector(".save-img");
 
 let brightness = 100,
     saturation = 100,
     inversion = 0,
     grayscale = 0;
+let rotate = 0,
+    flipHorizontal = 1,
+    flipVertical = 1;
+
+const applyFilters = () => {
+    previewImg.style.transform = `rotate(${rotate}deg) scale(${flipHorizontal},${flipVertical})`
+    previewImg.style.filter = `brightness(${brightness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`
+}
 
 const loadImage = () => {
     let file = fileInput.files[0];
@@ -27,19 +38,19 @@ filterOptions.forEach(option => {
         filterName.innerText = option.innerText;
 
         if (option.id === "brightness") {
-            filterSlider.max="200";
+            filterSlider.max = "200";
             filterSlider.value = brightness;
             filterValue.innerText = `${brightness}%`;
         } else if (option.id === "saturation") {
-            filterSlider.max="200";
+            filterSlider.max = "200";
             filterSlider.value = saturation;
             filterValue.innerText = `${saturation}%`;
         } else if (option.id === "inversion") {
-            filterSlider.max="100";
+            filterSlider.max = "100";
             filterSlider.value = inversion;
             filterValue.innerText = `${inversion}%`;
         } else {
-            filterSlider.max="100";
+            filterSlider.max = "100";
             filterSlider.value = grayscale;
             filterValue.innerText = `${grayscale}%`;
         }
@@ -59,8 +70,37 @@ const updateFilter = () => {
     } else {
         grayscale = filterSlider.value;
     }
+    applyFilters();
+}
+
+rotateOptions.forEach(option => {
+    option.addEventListener("click", () => { //add click event for rotate/flip buttons
+        if (option.id === "left") {
+            rotate -= 90;
+        } else if (option.id === "right") {
+            rotate += 90;
+        } else if (option.id === "horizontal") {
+            flipHorizontal = flipHorizontal === 1 ? -1 : 1;
+        } else {
+            flipVertical = flipVertical === 1 ? -1 : 1;
+        }
+        applyFilters();
+    })
+});
+
+const resetFilter = () => {
+    brightness = 100;
+    saturation = 100;
+    inversion = 0;
+    grayscale = 0;
+    rotate = 0;
+    flipHorizontal = 1;
+    flipVertical = 1;
+    filterOptions[0].click();//selected default (brightness)
+    applyFilters()
 }
 
 fileInput.addEventListener("change", loadImage)
 filterSlider.addEventListener("input", updateFilter)
+resetFilterBtn.addEventListener("click", resetFilter)
 chooseImgBtn.addEventListener("click", () => fileInput.click())
