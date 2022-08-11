@@ -10,17 +10,17 @@
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container ">
         <h2>Image Editor</h2>
         <div class="wrapper">
             <div class="editor-panel">
                 <div class="filter">
                     <label for="" class="title">Filters</label>
                     <div class="options">
-                        <button class="active">Brightness</button>
-                        <button>Saturation</button>
-                        <button>Inversion</button>
-                        <button>Grayscale</button>
+                        <button id="brightness"  class="active">Brightness</button>
+                        <button id="saturation" >Saturation</button>
+                        <button id="inversion" >Inversion</button>
+                        <button id="grayscale" >Grayscale</button>
                     </div>
                     <div class="slider">
                         <div class="filter-info">
@@ -47,10 +47,12 @@
         <div class="controls">
             <button class="reset-filter">Reset Filters</button>
             <div class="row">
+                <input type="file" class="file-input" accept="image/*" hidden>
                 <button class="choose-img">Choose Image</button>
                 <button class="save-img">Save Image</button>
             </div>
         </div>
     </div>
+    <script src="assets/script.js"></script>
 </body>
 </html>
