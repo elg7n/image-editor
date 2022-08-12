@@ -27,6 +27,7 @@ const loadImage = () => {
     if (!file) return;
     previewImg.src = URL.createObjectURL(file);
     previewImg.addEventListener("load", () => {
+        resetFilterBtn.click();
         document.querySelector(".container").classList.remove("disable")
     })
 }
@@ -96,11 +97,31 @@ const resetFilter = () => {
     rotate = 0;
     flipHorizontal = 1;
     flipVertical = 1;
-    filterOptions[0].click();//selected default (brightness)
+    filterOptions[0].click(); //selected default (brightness)
     applyFilters()
+}
+
+const savaImage = () => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d")
+    canvas.width = previewImg.width; //.naturalWidth
+    canvas.height = previewImg.height; //.naturalHeight
+    ctx.filter = `brightness(${brightness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`;
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    if (rotate !== 0) {
+        ctx.rotate(rotate * Math.PI / 180)
+    }
+    ctx.scale(flipHorizontal, flipVertical)
+    ctx.drawImage(previewImg, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+
+    const link = document.createElement("a");
+    link.download = "image.jpg";
+    link.href = canvas.toDataURL();
+    link.click();
 }
 
 fileInput.addEventListener("change", loadImage)
 filterSlider.addEventListener("input", updateFilter)
 resetFilterBtn.addEventListener("click", resetFilter)
+saveImgBtn.addEventListener("click", savaImage)
 chooseImgBtn.addEventListener("click", () => fileInput.click())
